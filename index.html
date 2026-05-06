@@ -8,13 +8,14 @@
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .task-card, .sholat-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .task-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .done { 
             background: #ecfdf5 !important; 
             border-color: #10b981 !important; 
             transform: scale(0.98);
         }
         .done .check-circle { background: #10b981 !important; color: white !important; }
+        /* Header dengan gambar latar belakang */
         .gradient-bg { 
             background: linear-gradient(135deg, rgba(30, 64, 175, 0.9) 0%, rgba(59, 130, 246, 0.8) 100%), 
                         url('https://freepik.com');
@@ -47,22 +48,10 @@
                 <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
                 <span class="font-semibold text-slate-700 text-sm">☀️ Bangun & Rapikan Kasur</span>
             </button>
-
-            <!-- Bagian Sholat dengan Sub-Item -->
-            <div class="bg-white rounded-2xl shadow-md p-4 space-y-3 border-2 border-blue-100">
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="text-lg">🕌</span>
-                    <span class="font-bold text-slate-800">Sholat 5 Waktu</span>
-                </div>
-                <div class="grid grid-cols-5 gap-2">
-                    <button onclick="toggleSholat(this, 'Subuh')" class="sholat-btn bg-slate-50 py-2 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500">SUBUH</button>
-                    <button onclick="toggleSholat(this, 'Dzuhur')" class="sholat-btn bg-slate-50 py-2 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500">DZUHUR</button>
-                    <button onclick="toggleSholat(this, 'Ashar')" class="sholat-btn bg-slate-50 py-2 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500">ASHAR</button>
-                    <button onclick="toggleSholat(this, 'Maghrib')" class="sholat-btn bg-slate-50 py-2 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500">MAGHRIB</button>
-                    <button onclick="toggleSholat(this, 'Isya')" class="sholat-btn bg-slate-50 py-2 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500">ISYA</button>
-                </div>
-            </div>
-
+            <button onclick="toggle(this, 'Sholat 5 Waktu')" class="task-card w-full bg-white p-4 rounded-2xl shadow-md border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700 text-sm">🕌 Sholat 5 Waktu</span>
+            </button>
             <button onclick="toggle(this, 'Mandi & Siap Sendiri')" class="task-card w-full bg-white p-4 rounded-2xl shadow-md border-2 border-transparent flex items-center gap-4">
                 <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
                 <span class="font-semibold text-slate-700 text-sm">🚿 Mandi & Siap Sendiri</span>
@@ -104,12 +93,11 @@
     </div>
 
     <script>
-        const NO_AYAH = "628123456789"; // GANTI
-        const NO_BUNDA = "628123456789"; // GANTI
+        const NO_AYAH = "628123456789"; 
+        const NO_BUNDA = "628123456789"; 
 
         let doneTasks = [];
-        let doneSholat = [];
-        const totalItems = 11; // 6 tugas utama + 5 waktu sholat
+        const totalTasks = document.querySelectorAll('.task-card').length;
 
         document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', { 
             weekday: 'long', day: 'numeric', month: 'long' 
@@ -125,22 +113,8 @@
             updateProgress();
         }
 
-        function toggleSholat(el, waktu) {
-            el.classList.toggle('bg-green-500');
-            el.classList.toggle('text-white');
-            el.classList.toggle('border-green-600');
-            
-            if (el.classList.contains('bg-green-500')) {
-                if(!doneSholat.includes(waktu)) doneSholat.push(waktu);
-            } else {
-                doneSholat = doneSholat.filter(s => s !== waktu);
-            }
-            updateProgress();
-        }
-
         function updateProgress() {
-            const count = doneTasks.length + doneSholat.length;
-            const percent = Math.round((count / totalItems) * 100);
+            const percent = Math.round((doneTasks.length / totalTasks) * 100);
             document.getElementById('progressText').innerText = percent + "%";
         }
 
@@ -151,18 +125,16 @@
             
             let pesan = `*🏆 LAPORAN SANG JUARA 🏆*\n`;
             pesan += `📅 _${tanggal}_\n\n`;
+            pesan += `*Target Mandiri Selesai:*\n`;
             
-            pesan += `*Kegiatan Selesai:*\n`;
-            doneTasks.forEach(t => { pesan += `✅ ${t}\n` });
-            
-            pesan += `\n*Laporan Sholat:*\n`;
-            const daftarSholat = ['Subuh', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'];
-            daftarSholat.forEach(s => {
-                pesan += doneSholat.includes(s) ? `✅ ${s}\n` : `❌ ${s}\n`;
-            });
+            if(doneTasks.length > 0) {
+                doneTasks.forEach(t => { pesan += `✅ ${t}\n` });
+            } else {
+                pesan += `_Belum ada target yang dicapai._\n`;
+            }
 
-            pesan += `\n*Catatan:* "${catatan || 'Hari yang luar biasa!'}"\n`;
-            pesan += `*Progress: ${document.getElementById('progressText').innerText}*`;
+            pesan += `\n*Catatan Hari Ini:*\n"${catatan || 'Hari yang luar biasa!'}"\n\n`;
+            pesan += `*Total Progress: ${document.getElementById('progressText').innerText}*`;
 
             window.open(`https://wa.me{nomor}?text=${encodeURIComponent(pesan)}`, '_blank');
         }
