@@ -182,7 +182,7 @@
   function sendReport(target) {
     const num = target === 'ayah' ? NO_AYAH : NO_BUNDA;
     const note = document.getElementById('catatan').value;
-    let msg = `*📊 DASHBOARD MANDIRI JUARA*\n\n`;
+    let msg = `*📊 BISMILLAH MANDIRI JUARA*\n\n`;
     msg += `*Pencapaian Harian:*\n${tasks.length > 0 ? tasks.map(t => "✅ " + t).join('\n') : '_Belum ada tugas_'}\n\n`;
     msg += `*Ibadah Sholat:*\n${['Subuh','Dzuhur','Ashar','Maghrib','Isya'].map(s => prayers.includes(s) ? "✅ "+s : "❌ "+s).join('\n')}\n\n`;
     msg += `*Catatan:* ${note || '-'}\n\n`;
