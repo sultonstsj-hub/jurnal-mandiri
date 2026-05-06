@@ -3,165 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jurnal Arfa Hebat</title>
+    <title>Super Student Journal</title>
     <script src="https://tailwindcss.com"></script>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f0f4f8; }
-        .glass-header {
-            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
-            border-radius: 0 0 40px 40px;
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .task-card, .sholat-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .done { 
+            background: #ecfdf5 !important; 
+            border-color: #10b981 !important; 
+            transform: scale(0.98);
         }
-        .task-card {
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-        .task-card.active {
-            background-color: #ecfdf5;
-            border-color: #10b981;
-            transform: translateY(2px);
-        }
-        .sholat-bubble {
-            transition: all 0.2s ease;
-        }
-        .sholat-bubble.active {
-            background-color: #10b981;
-            color: white;
-            border-color: #059669;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-        .progress-container {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-        }
-        .profile-border {
-            border: 4px solid white;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        .done .check-circle { background: #10b981 !important; color: white !important; }
+        .gradient-bg { 
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.9) 0%, rgba(59, 130, 246, 0.8) 100%), 
+                        url('https://freepik.com');
+            background-size: cover;
+            background-position: center;
         }
     </style>
 </head>
-<body class="min-h-screen pb-12">
+<body class="bg-slate-50 min-h-screen pb-10">
 
     <!-- Header Section -->
-    <div class="glass-header pt-12 pb-24 px-6 text-center shadow-xl">
-        <div class="max-w-md mx-auto relative">
-            <!-- Foto Profil -->
-            <div class="relative inline-block mb-6">
-                <!-- Ganti link src di bawah dengan path foto anak Anda di GitHub -->
-                <img src="foto-anak.png" class="w-28 h-28 rounded-full profile-border object-cover mx-auto bg-white" alt="Juara">
-                <div class="absolute -bottom-2 -right-2 bg-yellow-400 text-blue-900 text-[10px] font-extrabold px-3 py-1 rounded-full shadow-lg border-2 border-white">
-                    🎓 JUARA
-                </div>
+    <div class="gradient-bg pt-8 pb-20 px-6 rounded-b-[40px] shadow-2xl relative overflow-hidden">
+        <div class="max-w-md mx-auto flex justify-between items-center relative z-10">
+            <div>
+                <h1 class="text-white text-2xl font-extrabold tracking-tight drop-shadow-md">Sang Juara Mandiri! 🎓</h1>
+                <p id="currentDate" class="text-blue-50 text-sm font-medium drop-shadow-sm"></p>
             </div>
-            <h1 class="text-white text-2xl font-extrabold tracking-tight">Sang Juara Mandiri</h1>
-            <p id="currentDate" class="text-blue-100 text-sm mt-1 font-medium"></p>
-        </div>
-    </div>
-
-    <!-- Stats Floating Card -->
-    <div class="max-w-md mx-auto -mt-14 px-6">
-        <div class="bg-white rounded-3xl p-5 shadow-xl flex items-center justify-between border border-blue-50">
-            <div class="flex flex-col">
-                <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Progress Hari Ini</span>
-                <span id="progressText" class="text-2xl font-extrabold text-blue-600">0%</span>
-            </div>
-            <div class="w-32 h-3 bg-slate-100 rounded-full overflow-hidden">
-                <div id="progressBar" class="h-full bg-blue-500 transition-all duration-700" style="width: 0%"></div>
+            <div class="bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/40">
+                <span class="text-white font-bold text-xl" id="progressText">0%</span>
             </div>
         </div>
     </div>
 
-    <!-- Main List -->
-    <div class="max-w-md mx-auto mt-8 px-6 space-y-4">
+    <!-- Main Content -->
+    <div class="max-w-md mx-auto -mt-12 px-4 space-y-4 relative z-20">
         
-        <!-- Section: Ibadah -->
-        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-            <h2 class="text-slate-800 font-bold mb-4 flex items-center gap-2">🕌 Sholat 5 Waktu</h2>
-            <div class="grid grid-cols-5 gap-2">
-                <button onclick="toggleSholat(this, 'Subuh')" class="sholat-bubble h-12 rounded-2xl border-2 border-slate-100 bg-slate-50 text-[10px] font-extrabold text-slate-500">SUB</button>
-                <button onclick="toggleSholat(this, 'Dzuhur')" class="sholat-bubble h-12 rounded-2xl border-2 border-slate-100 bg-slate-50 text-[10px] font-extrabold text-slate-500">DZU</button>
-                <button onclick="toggleSholat(this, 'Ashar')" class="sholat-bubble h-12 rounded-2xl border-2 border-slate-100 bg-slate-50 text-[10px] font-extrabold text-slate-500">ASH</button>
-                <button onclick="toggleSholat(this, 'Maghrib')" class="sholat-bubble h-12 rounded-2xl border-2 border-slate-100 bg-slate-50 text-[10px] font-extrabold text-slate-500">MAG</button>
-                <button onclick="toggleSholat(this, 'Isya')" class="sholat-bubble h-12 rounded-2xl border-2 border-slate-100 bg-slate-50 text-[10px] font-extrabold text-slate-500">ISY</button>
+        <!-- Task Group -->
+        <div id="taskList" class="space-y-3">
+            <button onclick="toggle(this, 'Bangun & Rapikan Kasur')" class="task-card w-full bg-white p-4 rounded-2xl shadow-md border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700 text-sm">☀️ Bangun & Rapikan Kasur</span>
+            </button>
+
+            <!-- Bagian Sholat dengan Sub-Item -->
+            <div class="bg-white rounded-2xl shadow-md p-4 space-y-3 border-2 border-blue-100">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-lg">🕌</span>
+                    <span class="font-bold text-slate-800">Sholat 5 Waktu</span>
+                </div>
+                <div class="grid grid-cols-5 gap-2">
+                    <button onclick="toggleSholat(this, 'Subuh')" class="sholat-btn bg-slate-50 py-2 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500">SUBUH</button>
+                    <button onclick="toggleSholat(this, 'Dzuhur')" class="sholat-btn bg-slate-50 py-2 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500">DZUHUR</button>
+                    <button onclick="toggleSholat(this, 'Ashar')" class="sholat-btn bg-slate-50 py-2 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500">ASHAR</button>
+                    <button onclick="toggleSholat(this, 'Maghrib')" class="sholat-btn bg-slate-50 py-2 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500">MAGHRIB</button>
+                    <button onclick="toggleSholat(this, 'Isya')" class="sholat-btn bg-slate-50 py-2 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-500">ISYA</button>
+                </div>
             </div>
-        </div>
 
-        <!-- Section: Tugas Harian -->
-        <div class="space-y-3" id="taskList">
-            <button onclick="toggle(this, 'Bangun & Rapikan Kasur')" class="task-card w-full bg-white p-5 rounded-3xl shadow-sm flex items-center justify-between border-2 border-slate-50">
-                <div class="flex items-center gap-4">
-                    <span class="text-xl">☀️</span>
-                    <span class="font-bold text-slate-700 text-sm">Rapikan Kasur</span>
-                </div>
-                <div class="check-circle w-6 h-6 rounded-full border-2 border-slate-200 flex items-center justify-center text-transparent">✓</div>
+            <button onclick="toggle(this, 'Mandi & Siap Sendiri')" class="task-card w-full bg-white p-4 rounded-2xl shadow-md border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700 text-sm">🚿 Mandi & Siap Sendiri</span>
             </button>
-            <button onclick="toggle(this, 'Mengaji')" class="task-card w-full bg-white p-5 rounded-3xl shadow-sm flex items-center justify-between border-2 border-slate-50">
-                <div class="flex items-center gap-4">
-                    <span class="text-xl">📖</span>
-                    <span class="font-bold text-slate-700 text-sm">Mengaji</span>
-                </div>
-                <div class="check-circle w-6 h-6 rounded-full border-2 border-slate-200 flex items-center justify-center text-transparent">✓</div>
+            <button onclick="toggle(this, 'Cek Tas & Sarapan')" class="task-card w-full bg-white p-4 rounded-2xl shadow-md border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700 text-sm">🎒 Cek Tas & Sarapan</span>
             </button>
-            <button onclick="toggle(this, 'Belajar & Kerjakan PR')" class="task-card w-full bg-white p-5 rounded-3xl shadow-sm flex items-center justify-between border-2 border-slate-50">
-                <div class="flex items-center gap-4">
-                    <span class="text-xl">📚</span>
-                    <span class="font-bold text-slate-700 text-sm">Belajar & PR</span>
-                </div>
-                <div class="check-circle w-6 h-6 rounded-full border-2 border-slate-200 flex items-center justify-center text-transparent">✓</div>
+            <button onclick="toggle(this, 'Mengaji')" class="task-card w-full bg-white p-4 rounded-2xl shadow-md border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700 text-sm">📖 Mengaji</span>
             </button>
-            <button onclick="toggle(this, 'Menabung Hari Ini')" class="task-card w-full bg-white p-5 rounded-3xl shadow-sm flex items-center justify-between border-2 border-slate-50">
-                <div class="flex items-center gap-4">
-                    <span class="text-xl">💰</span>
-                    <span class="font-bold text-slate-700 text-sm">Menabung</span>
-                </div>
-                <div class="check-circle w-6 h-6 rounded-full border-2 border-slate-200 flex items-center justify-center text-transparent">✓</div>
+            <button onclick="toggle(this, 'Belajar & Kerjakan PR')" class="task-card w-full bg-white p-4 rounded-2xl shadow-md border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700 text-sm">📚 Belajar & Kerjakan PR</span>
+            </button>
+            <button onclick="toggle(this, 'Menabung Hari Ini')" class="task-card w-full bg-white p-4 rounded-2xl shadow-md border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700 text-sm">💰 Menabung Hari Ini</span>
             </button>
         </div>
 
-        <!-- Notes Area -->
-        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-            <label class="block text-slate-800 font-bold mb-3">Cerita Hebat Hari Ini:</label>
-            <textarea id="catatan" class="w-full bg-slate-50 rounded-2xl p-4 text-sm border-none focus:ring-2 focus:ring-blue-500 outline-none" rows="2" placeholder="Tuliskan pengalaman seru hari ini..."></textarea>
+        <!-- Notes Section -->
+        <div class="bg-white p-6 rounded-[28px] shadow-lg space-y-4">
+            <h3 class="font-bold text-slate-800 flex items-center gap-2">✍️ Cerita Hebat Hari Ini</h3>
+            <textarea id="catatan" rows="2" class="w-full bg-slate-50 p-4 rounded-2xl border-2 border-slate-100 focus:border-blue-500 focus:outline-none transition-all text-sm" placeholder="Apa pencapaian terbaikmu hari ini?"></textarea>
             
-            <div class="grid grid-cols-2 gap-3 mt-6">
-                <button onclick="kirimLaporan('ayah')" class="bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all text-xs">👨 LAPOR AYAH</button>
-                <button onclick="kirimLaporan('bunda')" class="bg-pink-500 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all text-xs">👩 LAPOR BUNDA</button>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="kirimLaporan('ayah')" class="bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all flex flex-col items-center">
+                    <span class="text-[9px] font-medium opacity-70 uppercase">Lapor ke</span>
+                    <span class="text-sm">👨 Ayah</span>
+                </button>
+                <button onclick="kirimLaporan('bunda')" class="bg-pink-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all flex flex-col items-center">
+                    <span class="text-[9px] font-medium opacity-70 uppercase">Lapor ke</span>
+                    <span class="text-sm">👩 Bunda</span>
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- KONFIGURASI ---
-        const NO_AYAH = "6282234588450"; 
-        const NO_BUNDA = "6285215798833"; 
-        // ------------------
+        const NO_AYAH = "628123456789"; // GANTI
+        const NO_BUNDA = "628123456789"; // GANTI
 
         let doneTasks = [];
         let doneSholat = [];
-        const totalItems = 9; 
+        const totalItems = 11; // 6 tugas utama + 5 waktu sholat
 
         document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', { 
             weekday: 'long', day: 'numeric', month: 'long' 
         });
 
         function toggle(el, taskName) {
-            el.classList.toggle('active');
-            const check = el.querySelector('.check-circle');
-            if (el.classList.contains('active')) {
+            el.classList.toggle('done');
+            if (el.classList.contains('done')) {
                 if(!doneTasks.includes(taskName)) doneTasks.push(taskName);
-                check.classList.replace('border-slate-200', 'bg-green-500');
-                check.classList.replace('text-transparent', 'text-white');
             } else {
                 doneTasks = doneTasks.filter(t => t !== taskName);
-                check.classList.replace('bg-green-500', 'border-slate-200');
-                check.classList.replace('text-white', 'text-transparent');
             }
             updateProgress();
         }
 
         function toggleSholat(el, waktu) {
-            el.classList.toggle('active');
-            if (el.classList.contains('active')) {
+            el.classList.toggle('bg-green-500');
+            el.classList.toggle('text-white');
+            el.classList.toggle('border-green-600');
+            
+            if (el.classList.contains('bg-green-500')) {
                 if(!doneSholat.includes(waktu)) doneSholat.push(waktu);
             } else {
                 doneSholat = doneSholat.filter(s => s !== waktu);
@@ -173,17 +142,28 @@
             const count = doneTasks.length + doneSholat.length;
             const percent = Math.round((count / totalItems) * 100);
             document.getElementById('progressText').innerText = percent + "%";
-            document.getElementById('progressBar').style.width = percent + "%";
         }
 
         function kirimLaporan(penerima) {
             const nomor = (penerima === 'ayah') ? NO_AYAH : NO_BUNDA;
             const catatan = document.getElementById('catatan').value;
-            let pesan = `*🏆 JURNAL ANAK HEBAT 🏆*\n\n`;
-            pesan += `*Progress Hari Ini: ${document.getElementById('progressText').innerText}*\n\n`;
-            pesan += `*Tugas Selesai:*\n${doneTasks.map(t => "✅ " + t).join('\n')}\n\n`;
-            pesan += `*Ibadah Sholat:*\n${['Subuh','Dzuhur','Ashar','Maghrib','Isya'].map(s => doneSholat.includes(s) ? "✅ "+s : "❌ "+s).join('\n')}\n\n`;
-            pesan += `*Catatan:* ${catatan || 'Alhamdulillah hari yang luar biasa!'}\n`;
+            const tanggal = document.getElementById('currentDate').innerText;
+            
+            let pesan = `*🏆 LAPORAN SANG JUARA 🏆*\n`;
+            pesan += `📅 _${tanggal}_\n\n`;
+            
+            pesan += `*Kegiatan Selesai:*\n`;
+            doneTasks.forEach(t => { pesan += `✅ ${t}\n` });
+            
+            pesan += `\n*Laporan Sholat:*\n`;
+            const daftarSholat = ['Subuh', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'];
+            daftarSholat.forEach(s => {
+                pesan += doneSholat.includes(s) ? `✅ ${s}\n` : `❌ ${s}\n`;
+            });
+
+            pesan += `\n*Catatan:* "${catatan || 'Hari yang luar biasa!'}"\n`;
+            pesan += `*Progress: ${document.getElementById('progressText').innerText}*`;
+
             window.open(`https://wa.me{nomor}?text=${encodeURIComponent(pesan)}`, '_blank');
         }
     </script>
