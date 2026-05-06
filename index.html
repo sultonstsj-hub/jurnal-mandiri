@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Student Journal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .task-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .done { 
+            background: #ecfdf5 !important; 
+            border-color: #10b981 !important; 
+            transform: scale(0.98);
+        }
+        .done .check-circle { background: #10b981 !important; color: white !important; }
+        .gradient-bg { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen pb-10">
+
+    <!-- Header Section -->
+    <div class="gradient-bg pt-8 pb-16 px-6 rounded-b-[40px] shadow-2xl">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-white text-2xl font-extrabold tracking-tight">Halo Sang Juara! 🚀</h1>
+                <p id="currentDate" class="text-blue-100 text-sm opacity-90"></p>
+            </div>
+            <div class="bg-white/20 p-2 rounded-2xl backdrop-blur-md">
+                <span class="text-white font-bold text-xl" id="progressText">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-md mx-auto -mt-10 px-4 space-y-4">
+        
+        <!-- Task Group -->
+        <div id="taskList" class="space-y-3">
+            <!-- Item 1 -->
+            <button onclick="toggle(this, 'Bangun & Rapikan Kasur')" class="task-card w-full bg-white p-4 rounded-2xl shadow-sm border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700">☀️ Bangun & Rapikan Kasur</span>
+            </button>
+            <!-- Item 2 -->
+            <button onclick="toggle(this, 'Sholat 5 Waktu')" class="task-card w-full bg-white p-4 rounded-2xl shadow-sm border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700">🕌 Sholat 5 Waktu</span>
+            </button>
+            <!-- Item 3 -->
+            <button onclick="toggle(this, 'Mandi & Siap Sendiri')" class="task-card w-full bg-white p-4 rounded-2xl shadow-sm border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700">🚿 Mandi & Siap Sendiri</span>
+            </button>
+            <!-- Item 4 -->
+            <button onclick="toggle(this, 'Cek Tas & Sarapan')" class="task-card w-full bg-white p-4 rounded-2xl shadow-sm border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700">🎒 Cek Tas & Sarapan</span>
+            </button>
+            <!-- Item 5 -->
+            <button onclick="toggle(this, 'Mengaji')" class="task-card w-full bg-white p-4 rounded-2xl shadow-sm border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700">📖 Mengaji</span>
+            </button>
+            <!-- Item 6 -->
+            <button onclick="toggle(this, 'Belajar & Kerjakan PR')" class="task-card w-full bg-white p-4 rounded-2xl shadow-sm border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700">📚 Belajar & Kerjakan PR</span>
+            </button>
+            <!-- Item 7 -->
+            <button onclick="toggle(this, 'Menabung Hari Ini')" class="task-card w-full bg-white p-4 rounded-2xl shadow-sm border-2 border-transparent flex items-center gap-4">
+                <div class="check-circle w-6 h-6 border-2 border-slate-200 rounded-full flex items-center justify-center text-[10px] text-transparent">✓</div>
+                <span class="font-semibold text-slate-700">💰 Menabung Hari Ini</span>
+            </button>
+        </div>
+
+        <!-- Notes Section -->
+        <div class="bg-white p-6 rounded-[28px] shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                ✍️ Catatan Hari Ini
+            </h3>
+            <textarea id="catatan" rows="3" class="w-full bg-slate-50 p-4 rounded-2xl border-2 border-slate-100 focus:border-blue-500 focus:outline-none transition-all" placeholder="Tulis cerita hebatmu hari ini..."></textarea>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="kirimLaporan('ayah')" class="bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all flex flex-col items-center">
+                    <span class="text-[10px] font-medium opacity-80 uppercase tracking-widest">Lapor ke</span>
+                    <span>AYAH</span>
+                </button>
+                <button onclick="kirimLaporan('bunda')" class="bg-pink-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all flex flex-col items-center">
+                    <span class="text-[10px] font-medium opacity-80 uppercase tracking-widest">Lapor ke</span>
+                    <span>BUNDA</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIG ---
+        const NO_AYAH = "628123456789"; // GANTI NOMOR AYAH
+        const NO_BUNDA = "628123456789"; // GANTI NOMOR BUNDA
+        // --------------
+
+        let doneTasks = [];
+        const totalTasks = document.querySelectorAll('.task-card').length;
+
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', { 
+            weekday: 'long', day: 'numeric', month: 'long' 
+        });
+
+        function toggle(el, taskName) {
+            el.classList.toggle('done');
+            if (el.classList.contains('done')) {
+                if(!doneTasks.includes(taskName)) doneTasks.push(taskName);
+            } else {
+                doneTasks = doneTasks.filter(t => t !== taskName);
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const percent = Math.round((doneTasks.length / totalTasks) * 100);
+            document.getElementById('progressText').innerText = percent + "%";
+        }
+
+        function kirimLaporan(penerima) {
+            const nomor = (penerima === 'ayah') ? NO_AYAH : NO_BUNDA;
+            const catatan = document.getElementById('catatan').value;
+            const tanggal = document.getElementById('currentDate').innerText;
+            
+            let pesan = `*🌟 LAPORAN JURNAL MANDIRI 🌟*\n`;
+            pesan += `📅 _${tanggal}_\n\n`;
+            pesan += `*Kegiatan Yang Sudah Selesai:*\n`;
+            
+            if(doneTasks.length > 0) {
+                doneTasks.forEach(t => { pesan += `✅ ${t}\n` });
+            } else {
+                pesan += `_Belum ada kegiatan yang diselesaikan_\n`;
+            }
+
+            pesan += `\n*Catatan Hebat Hari Ini:*\n"${catatan || 'Anak hebat tidak mengeluh!'}"\n\n`;
+            pesan += `*Progress Hari Ini: ${document.getElementById('progressText').innerText}*`;
+
+            const url = `https://wa.me{nomor}?text=${encodeURIComponent(pesan)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
