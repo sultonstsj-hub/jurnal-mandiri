@@ -23,13 +23,18 @@ jobs:
       - name: Initialize Web Project Structure
         run: |
           npm init -y
-          # Membuat file package.json minimal yang valid agar Capacitor tidak error
+          # Membuat file package.json minimal yang valid
           echo '{"name": "jurnal-mandiri", "version": "1.0.0", "scripts": {"build": "echo web-built"}}' > package.json
+          
+          # Membuat folder 'www' dan memindahkan file website ke dalamnya agar disukai oleh Capacitor
+          mkdir www
+          cp index.html www/
+          cp foto-anak.png www/ || true
 
       - name: Install Capacitor & Build Android
         run: |
           npm install @capacitor/core @capacitor/cli
-          npx cap init "Jurnal Mandiri" "com.jurnal.mandiri" --web-dir=.
+          npx cap init "Jurnal Mandiri" "com.jurnal.mandiri" --web-dir=www
           npm install @capacitor/android
           npx cap add android
           npx cap sync android
