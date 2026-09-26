@@ -20,9 +20,14 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Install Capacitor & Build Android
+      - name: Initialize Web Project Structure
         run: |
           npm init -y
+          # Membuat file package.json minimal yang valid agar Capacitor tidak error
+          echo '{"name": "jurnal-mandiri", "version": "1.0.0", "scripts": {"build": "echo web-built"}}' > package.json
+
+      - name: Install Capacitor & Build Android
+        run: |
           npm install @capacitor/core @capacitor/cli
           npx cap init "Jurnal Mandiri" "com.jurnal.mandiri" --web-dir=.
           npm install @capacitor/android
