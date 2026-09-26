@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21' # Diperbarui ke versi 21 agar sesuai dengan Capacitor terbaru
 
       - name: Initialize Web Project Structure
         run: |
@@ -26,7 +26,7 @@ jobs:
           # Membuat file package.json minimal yang valid
           echo '{"name": "jurnal-mandiri", "version": "1.0.0", "scripts": {"build": "echo web-built"}}' > package.json
           
-          # Membuat folder 'www' dan memindahkan file website ke dalamnya agar disukai oleh Capacitor
+          # Membuat folder 'www' dan memindahkan file website ke dalamnya
           mkdir www
           cp index.html www/
           cp foto-anak.png www/ || true
