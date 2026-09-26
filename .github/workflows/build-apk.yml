@@ -18,15 +18,12 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '21' # Diperbarui ke versi 21 agar sesuai dengan Capacitor terbaru
+          java-version: '21'
 
       - name: Initialize Web Project Structure
         run: |
           npm init -y
-          # Membuat file package.json minimal yang valid
           echo '{"name": "jurnal-mandiri", "version": "1.0.0", "scripts": {"build": "echo web-built"}}' > package.json
-          
-          # Membuat folder 'www' dan memindahkan file website ke dalamnya
           mkdir www
           cp index.html www/
           cp foto-anak.png www/ || true
@@ -38,6 +35,21 @@ jobs:
           npm install @capacitor/android
           npx cap add android
           npx cap sync android
+
+      - name: Inject Anti-Conflict Resolution (Fix Duplicate Kotlin Class)
+        run: |
+          # Menyisipkan aturan pemaksaan versi Kotlin ke file build.gradle utama untuk mengunci dan mencegah konflik pustaka
+          echo "subprojects {
+              configurations.all {
+                  resolutionStrategy {
+                      eachDependency { details ->
+                          if (details.requested.group == 'org.jetbrains.kotlin') {
+                              details.useVersion '1.8.22'
+                          }
+                      }
+                  }
+              }
+          }" >> android/build.gradle
 
       - name: Build Release APK
         run: |
